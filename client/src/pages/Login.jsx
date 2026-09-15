@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ApiError } from '../api/client.js';
-import { LoginBackground } from '../components/LoginBackground.jsx';
+import { AuthCard } from '../components/AuthCard.jsx';
+import { PasswordField } from '../components/PasswordField.jsx';
 import { useAuth } from '../hooks/useAuth.jsx';
 
 export function Login() {
@@ -22,37 +23,49 @@ export function Login() {
       await login({ email, password });
       navigate('/');
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : 'Nao foi possivel entrar');
+      setError(err instanceof ApiError ? err.message : 'Não foi possível entrar');
     } finally {
       setIsSubmitting(false);
     }
   }
 
   return (
-    <div className="login-page">
-      <LoginBackground />
-      <form onSubmit={handleSubmit} className="auth-form">
-        <h1>Entrar</h1>
+    <AuthCard tagline="Entre para acompanhar as finanças do seu negócio">
+      <form onSubmit={handleSubmit}>
         {error && <p className="error">{error}</p>}
 
-        <label>
-          Email
-          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-        </label>
+        <div className="auth-field">
+          <div className="auth-field-head">
+            <label htmlFor="email">E-mail</label>
+          </div>
+          <input
+            id="email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            autoComplete="email"
+            required
+          />
+        </div>
 
-        <label>
-          Senha
-          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-        </label>
+        <PasswordField
+          id="senha"
+          label="Senha"
+          value={password}
+          onChange={setPassword}
+          autoComplete="current-password"
+        />
 
-        <button type="submit" disabled={isSubmitting}>
+        <button type="submit" className="auth-submit" disabled={isSubmitting}>
           {isSubmitting ? 'Entrando...' : 'Entrar'}
         </button>
-
-        <p>
-          Não tem conta? <Link to="/register">Cadastre-se</Link>
-        </p>
       </form>
-    </div>
+
+      <div className="auth-divider" />
+
+      <p className="auth-footer">
+        Ainda não tem conta? <Link to="/register">Criar conta</Link>
+      </p>
+    </AuthCard>
   );
 }

@@ -26,6 +26,10 @@ export function LoginBackground() {
 
   return (
     <div className="login-bg" aria-hidden="true">
+      {/* textura de papel milimetrado - da o contexto "financeiro" sem
+          competir com o conteudo, porque a mascara apaga as bordas */}
+      <div className="login-grid" />
+
       <svg className="login-chart-bg" viewBox="0 0 400 200" preserveAspectRatio="none">
         <polyline
           className="login-chart-line"
