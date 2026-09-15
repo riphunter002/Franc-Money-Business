@@ -5,10 +5,10 @@ import { findScoped } from '../utils/findScoped.js';
 const CATEGORY_SELECT = { id: true, name: true, color: true, type: true };
 
 const createTransactionSchema = z.object({
-  description: z.string().trim().min(1, 'Descricao obrigatoria').max(200),
+  description: z.string().trim().min(1, 'Descrição obrigatória').max(200),
   amount: z.coerce.number().positive('Valor deve ser maior que zero'),
   date: z.coerce.date(),
-  categoryId: z.string().uuid('categoryId invalido'),
+  categoryId: z.string().uuid('categoryId inválido'),
 });
 
 const updateTransactionSchema = createTransactionSchema.partial();
@@ -27,7 +27,7 @@ export const TransactionController = {
 
     // type nao vem do cliente - e sempre o mesmo da categoria escolhida,
     // pra nunca existir uma transacao contradizendo o tipo da sua categoria
-    const category = await findScoped(prisma.category, data.categoryId, req.params.businessId, 'Categoria nao encontrada para esse negocio');
+    const category = await findScoped(prisma.category, data.categoryId, req.params.businessId, 'Categoria não encontrada para esse negócio');
 
     const transaction = await prisma.transaction.create({
       data: {
@@ -79,11 +79,11 @@ export const TransactionController = {
 
   async update(req, res) {
     const data = updateTransactionSchema.parse(req.body);
-    await findScoped(prisma.transaction, req.params.transactionId, req.params.businessId, 'Transacao nao encontrada');
+    await findScoped(prisma.transaction, req.params.transactionId, req.params.businessId, 'Transação não encontrada');
 
     let type;
     if (data.categoryId) {
-      const category = await findScoped(prisma.category, data.categoryId, req.params.businessId, 'Categoria nao encontrada para esse negocio');
+      const category = await findScoped(prisma.category, data.categoryId, req.params.businessId, 'Categoria não encontrada para esse negócio');
       type = category.type;
     }
 
@@ -97,7 +97,7 @@ export const TransactionController = {
   },
 
   async remove(req, res) {
-    await findScoped(prisma.transaction, req.params.transactionId, req.params.businessId, 'Transacao nao encontrada');
+    await findScoped(prisma.transaction, req.params.transactionId, req.params.businessId, 'Transação não encontrada');
     await prisma.transaction.delete({ where: { id: req.params.transactionId } });
     res.status(204).send();
   },

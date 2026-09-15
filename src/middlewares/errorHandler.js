@@ -9,12 +9,12 @@ export function errorHandler(err, req, res, next) {
   // generico e vira 500 (erro do servidor), quando na verdade e erro de
   // quem chamou a API (corpo invalido)
   if (err.type === 'entity.parse.failed') {
-    return res.status(400).json({ error: 'JSON invalido no corpo da requisicao' });
+    return res.status(400).json({ error: 'JSON inválido no corpo da requisição' });
   }
 
   if (err instanceof ZodError) {
     return res.status(400).json({
-      error: 'Dados invalidos',
+      error: 'Dados inválidos',
       details: err.issues.map((issue) => ({ field: issue.path.join('.'), message: issue.message })),
     });
   }
@@ -25,7 +25,7 @@ export function errorHandler(err, req, res, next) {
 
   // erro do Prisma: violacao de constraint unica (ex: email duplicado)
   if (err.code === 'P2002') {
-    return res.status(409).json({ error: 'Registro ja existe' });
+    return res.status(409).json({ error: 'Registro já existe' });
   }
 
   console.error(err);

@@ -7,16 +7,16 @@ import { AppError } from '../utils/AppError.js';
 
 const registerSchema = z.object({
   name: z.string().trim().min(2, 'Nome deve ter pelo menos 2 caracteres').max(100),
-  email: z.string().trim().toLowerCase().email('Email invalido').max(255),
+  email: z.string().trim().toLowerCase().email('E-mail inválido').max(255),
   // 72 de proposito: bcrypt trunca silenciosamente qualquer coisa alem de
   // 72 bytes - sem esse limite explicito, uma senha maior passaria a
   // impressao de "mais segura" sem realmente ser
-  password: z.string().min(8, 'Senha deve ter pelo menos 8 caracteres').max(72, 'Senha deve ter no maximo 72 caracteres'),
+  password: z.string().min(8, 'Senha deve ter pelo menos 8 caracteres').max(72, 'Senha deve ter no máximo 72 caracteres'),
 });
 
 const loginSchema = z.object({
-  email: z.string().trim().toLowerCase().email('Email invalido').max(255),
-  password: z.string().min(1, 'Senha obrigatoria').max(72),
+  email: z.string().trim().toLowerCase().email('E-mail inválido').max(255),
+  password: z.string().min(1, 'Senha obrigatória').max(72),
 });
 
 function issueToken(userId) {
@@ -33,7 +33,7 @@ export const UserController = {
 
     const existing = await prisma.user.findUnique({ where: { email: data.email } });
     if (existing) {
-      throw new AppError(409, 'Ja existe uma conta com esse email');
+      throw new AppError(409, 'Já existe uma conta com esse e-mail');
     }
 
     const passwordHash = await bcrypt.hash(data.password, 10);
@@ -51,7 +51,7 @@ export const UserController = {
     const user = await prisma.user.findUnique({ where: { email: data.email } });
     // mensagem identica para email inexistente e senha errada, de proposito -
     // nao da pra um atacante descobrir por tentativa quais emails tem conta
-    const invalidCredentials = () => new AppError(401, 'Credenciais invalidas');
+    const invalidCredentials = () => new AppError(401, 'Credenciais inválidas');
 
     if (!user) {
       throw invalidCredentials();

@@ -36,7 +36,7 @@ app.use('/businesses/:businessId/categories', auth, businessOwnership, categoryR
 app.use('/businesses/:businessId/transactions', auth, businessOwnership, transactionRoutes);
 
 app.use((req, res) => {
-  res.status(404).json({ error: 'Rota nao encontrada' });
+  res.status(404).json({ error: 'Rota não encontrada' });
 });
 
 // tem que ser o ultimo app.use - middleware de erro precisa vir depois de

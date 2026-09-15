@@ -11,11 +11,11 @@ export async function businessOwnership(req, res, next) {
   const business = await prisma.business.findUnique({ where: { id: businessId } });
 
   if (!business) {
-    throw new AppError(404, 'Negocio nao encontrado');
+    throw new AppError(404, 'Negócio não encontrado');
   }
 
   if (business.ownerId !== req.userId) {
-    throw new AppError(403, 'Voce nao tem acesso a esse negocio');
+    throw new AppError(403, 'Você não tem acesso a esse negócio');
   }
 
   req.business = business;

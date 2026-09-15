@@ -8,7 +8,7 @@ const HEX_COLOR = /^#[0-9A-Fa-f]{6}$/;
 const createCategorySchema = z.object({
   name: z.string().trim().min(2, 'Nome deve ter pelo menos 2 caracteres').max(50),
   type: z.enum(['INCOME', 'EXPENSE']),
-  color: z.string().regex(HEX_COLOR, 'Cor deve ser um hex valido, ex: #22C55E'),
+  color: z.string().regex(HEX_COLOR, 'Cor deve ser um hex válido, ex: #22C55E'),
 });
 
 const updateCategorySchema = createCategorySchema.partial();
@@ -35,7 +35,7 @@ export const CategoryController = {
 
   async update(req, res) {
     const data = updateCategorySchema.parse(req.body);
-    const current = await findScoped(prisma.category, req.params.categoryId, req.params.businessId, 'Categoria nao encontrada');
+    const current = await findScoped(prisma.category, req.params.categoryId, req.params.businessId, 'Categoria não encontrada');
 
     if (data.type && data.type !== current.type) {
       const transactionCount = await prisma.transaction.count({
@@ -48,7 +48,7 @@ export const CategoryController = {
       // que quebra a leitura de /summary e /alerts (chegam a derrubar o
       // endpoint com erro 500, confirmado em teste)
       if (transactionCount > 0) {
-        throw new AppError(409, 'Nao e possivel mudar o tipo de uma categoria que ja tem transacoes.');
+        throw new AppError(409, 'Não é possível mudar o tipo de uma categoria que já tem transações.');
       }
     }
 
@@ -61,14 +61,14 @@ export const CategoryController = {
   },
 
   async remove(req, res) {
-    await findScoped(prisma.category, req.params.categoryId, req.params.businessId, 'Categoria nao encontrada');
+    await findScoped(prisma.category, req.params.categoryId, req.params.businessId, 'Categoria não encontrada');
 
     const transactionCount = await prisma.transaction.count({
       where: { categoryId: req.params.categoryId },
     });
 
     if (transactionCount > 0) {
-      throw new AppError(409, 'Nao e possivel excluir uma categoria com transacoes. Exclua ou reclassifique as transacoes primeiro.');
+      throw new AppError(409, 'Não é possível excluir uma categoria com transações. Exclua ou reclassifique as transações primeiro.');
     }
 
     await prisma.category.delete({ where: { id: req.params.categoryId } });

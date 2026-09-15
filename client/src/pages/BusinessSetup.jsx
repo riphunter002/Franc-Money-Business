@@ -29,7 +29,7 @@ export function BusinessSetup() {
         // formulario escondido - abre ja aberto nesse caso
         if (data.length === 0) setIsFormOpen(true);
       })
-      .catch((err) => setError(err instanceof ApiError ? err.message : 'Erro ao carregar negocios'))
+      .catch((err) => setError(err instanceof ApiError ? err.message : 'Erro ao carregar negócios'))
       .finally(() => setIsLoading(false));
   }, []);
 
@@ -48,7 +48,7 @@ export function BusinessSetup() {
       selectBusiness(business);
       navigate('/');
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : 'Erro ao criar negocio');
+      setError(err instanceof ApiError ? err.message : 'Erro ao criar negócio');
     } finally {
       setIsCreating(false);
     }
