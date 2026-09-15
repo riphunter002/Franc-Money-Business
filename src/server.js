@@ -14,6 +14,16 @@ import { errorHandler } from './middlewares/errorHandler.js';
 
 const app = express();
 
+// Render fica na frente da aplicacao como um unico proxy reverso, injetando
+// o IP real do cliente no header X-Forwarded-For. Sem isso, o Express usa o
+// IP do proprio proxy do Render pra TODA requisicao - o rate limiter do
+// login passa a contar tentativas de TODOS os usuarios juntos num balde so,
+// em vez de por pessoa (confirmado em producao antes desse fix).
+// Valor "1" = confia em exatamente um hop de proxy, que e o setup do Render;
+// um valor maior (ou "true", que confia em qualquer numero de hops)
+// permitiria forjar o X-Forwarded-For pra burlar o rate limit.
+app.set('trust proxy', 1);
+
 app.use(helmet());
 app.use(cors({ origin: env.CORS_ORIGIN }));
 app.use(express.json());
