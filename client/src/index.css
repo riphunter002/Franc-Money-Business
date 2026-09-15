@@ -1,0 +1,564 @@
+:root {
+  color-scheme: light;
+  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #f4f5f7;
+  color: #1f2937;
+}
+
+button {
+  cursor: pointer;
+  font: inherit;
+}
+
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+/* "card" e o visual de caixa branca flutuante - usado na pagina inteira de
+   auth e na pagina inteira do resto, mas NAO no form aninhado dentro de
+   uma pagina (senao vira caixa dentro de caixa) */
+.auth-form,
+.page {
+  width: 100%;
+  max-width: 360px;
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.page {
+  max-width: 480px;
+  margin: 3rem auto;
+}
+
+/* estilo de campo/botao, reutilizado tanto no card inteiro (.auth-form)
+   quanto num form solto dentro de uma pagina (.field-group) */
+.auth-form label,
+.field-group label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.auth-form input,
+.field-group input {
+  font: inherit;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+}
+
+.auth-form button,
+.field-group button {
+  padding: 0.65rem 1.25rem;
+  border: none;
+  border-radius: 8px;
+  background: #16a34a;
+  color: white;
+  font-weight: 600;
+}
+
+.auth-form button {
+  width: 100%;
+}
+
+.auth-form button:disabled,
+.field-group button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.error {
+  background: #fef2f2;
+  color: #b91c1c;
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+}
+
+.business-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.business-item {
+  width: 100%;
+  text-align: left;
+  padding: 0.75rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: white;
+}
+
+.business-item:hover {
+  border-color: #16a34a;
+}
+
+.business-type {
+  color: #6b7280;
+  font-weight: 400;
+}
+
+.secondary-button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: white;
+  color: #1f2937;
+  font-weight: 600;
+}
+
+.secondary-button:hover {
+  border-color: #9ca3af;
+}
+
+.hint {
+  color: #6b7280;
+  font-size: 0.875rem;
+}
+
+/* ---------- dashboard ---------- */
+
+.dashboard {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 2rem 1rem 4rem;
+}
+
+.dashboard-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.dashboard-header h1 {
+  margin: 0 0 0.25rem;
+}
+
+.dashboard-section {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.dashboard-section h2 {
+  margin: 0 0 1rem;
+  font-size: 1rem;
+}
+
+.empty-state {
+  color: #6b7280;
+  font-size: 0.875rem;
+}
+
+/* stat tiles */
+
+.stat-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1rem;
+  padding: 1.5rem;
+}
+
+.stat-tile {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.stat-tile-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #6b7280;
+}
+
+.stat-tile-value {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.stat-tile-value--good {
+  color: #0ca30c;
+}
+
+.stat-tile-value--critical {
+  color: #d03b3b;
+}
+
+.stat-tile-status {
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.stat-tile-status--good {
+  color: #0ca30c;
+}
+
+.stat-tile-status--critical {
+  color: #d03b3b;
+}
+
+/* alerts - a secao com mais destaque visual da pagina, de proposito */
+
+.alert-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.alert-card {
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.85rem 1rem;
+  background: #fff8ec;
+  border: 1px solid #fab219;
+  border-left-width: 4px;
+  border-radius: 8px;
+}
+
+.alert-card-icon {
+  color: #b8790a;
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.alert-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.alert-card-message {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #1f2937;
+}
+
+.alert-card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.75rem;
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+
+.alert-card-category {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-weight: 600;
+}
+
+.alert-card-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.alert-empty {
+  color: #0ca30c;
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+/* category breakdown */
+
+.category-bars {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.category-bar-row {
+  display: grid;
+  grid-template-columns: minmax(70px, 25%) 1fr auto;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.category-bar-label {
+  font-size: 0.85rem;
+  color: #1f2937;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.category-bar-track {
+  background: #f4f5f7;
+  border-radius: 4px;
+  height: 20px;
+  overflow: hidden;
+}
+
+.category-bar-fill {
+  height: 100%;
+  border-radius: 0 4px 4px 0;
+  box-shadow: inset 0 0 0 1px rgba(11, 11, 11, 0.1);
+  min-width: 2px;
+}
+
+.category-bar-value {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #1f2937;
+  white-space: nowrap;
+}
+
+/* ---------- app shell (AppLayout) ---------- */
+
+.app-header {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1rem 1.5rem;
+  background: white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.app-header-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  min-width: 0;
+}
+
+.app-header-info strong {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.app-nav {
+  display: flex;
+  gap: 1rem;
+  flex: 1;
+  flex-wrap: wrap;
+}
+
+.app-nav a {
+  color: #6b7280;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 0.35rem 0;
+  border-bottom: 2px solid transparent;
+}
+
+.app-nav a.active {
+  color: #16a34a;
+  border-bottom-color: #16a34a;
+}
+
+.app-main {
+  padding: 1.5rem 1rem 4rem;
+}
+
+/* ---------- paginas com tabela (Categorias/Transacoes) ---------- */
+
+.page-wide {
+  max-width: 840px;
+  margin: 0 auto;
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.page-header h1 {
+  margin: 0;
+}
+
+.filters-row {
+  margin-bottom: 1rem;
+}
+
+.filters-row select {
+  font: inherit;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: white;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.data-table th,
+.data-table td {
+  text-align: left;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #f0f0ee;
+  font-size: 0.9rem;
+}
+
+.data-table th {
+  color: #6b7280;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.data-table tr:last-child td {
+  border-bottom: none;
+}
+
+.table-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+  white-space: nowrap;
+}
+
+.link-button {
+  background: none;
+  border: none;
+  padding: 0;
+  color: #2a78d6;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.link-button--danger {
+  color: #d03b3b;
+}
+
+.color-swatch {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
+  box-shadow: inset 0 0 0 1px rgba(11, 11, 11, 0.15);
+  vertical-align: middle;
+}
+
+.amount-income {
+  color: #0ca30c;
+  font-weight: 600;
+}
+
+.amount-expense {
+  color: #1f2937;
+  font-weight: 600;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.25rem;
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+.pagination button {
+  padding: 0.4rem 0.9rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: white;
+  font-weight: 600;
+}
+
+.pagination button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ---------- modal (CategoryModal/TransactionModal) ---------- */
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(11, 11, 11, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  z-index: 10;
+}
+
+.modal-box {
+  width: 100%;
+  max-width: 400px;
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: #6b7280;
+  padding: 0;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.modal-actions .secondary-button {
+  margin: 0;
+}

@@ -1,0 +1,74 @@
+generator client {
+  provider     = "prisma-client"
+  output       = "../src/generated/prisma"
+  runtime      = "nodejs"
+  moduleFormat = "esm"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id           String     @id @default(uuid())
+  name         String
+  email        String     @unique
+  passwordHash String
+  createdAt    DateTime   @default(now())
+  businesses   Business[]
+}
+
+model Business {
+  id           String        @id @default(uuid())
+  name         String
+  // string livre por enquanto (ex: "barbearia", "pizzaria") - nao travar
+  // futuros tipos de negocio numa enum fechada
+  type         String
+  ownerId      String
+  owner        User          @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  createdAt    DateTime      @default(now())
+  categories   Category[]
+  transactions Transaction[]
+
+  @@index([ownerId])
+}
+
+enum CategoryType {
+  INCOME
+  EXPENSE
+}
+
+model Category {
+  id           String        @id @default(uuid())
+  name         String
+  type         CategoryType
+  // cor em hex, usada diretamente nos graficos do dashboard
+  color        String
+  businessId   String
+  business     Business      @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  transactions Transaction[]
+  createdAt    DateTime      @default(now())
+
+  @@index([businessId])
+}
+
+model Transaction {
+  id          String       @id @default(uuid())
+  description String
+  // Decimal (nao Float) para nao ter erro de arredondamento em dinheiro
+  amount      Decimal      @db.Decimal(10, 2)
+  type        CategoryType
+  date        DateTime
+  businessId  String
+  business    Business     @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  categoryId  String
+  // sem cascade aqui de proposito: apagar uma categoria com transacoes deve
+  // falhar (Restrict), nunca apagar historico financeiro em silencio
+  category    Category     @relation(fields: [categoryId], references: [id])
+  createdAt   DateTime     @default(now())
+
+  // consulta mais comum do produto: transacoes de UM negocio dentro de um
+  // intervalo de datas (usado por /summary e /alerts)
+  @@index([businessId, date])
+  @@index([categoryId])
+}
