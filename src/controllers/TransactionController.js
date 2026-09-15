@@ -5,7 +5,7 @@ import { findScoped } from '../utils/findScoped.js';
 const CATEGORY_SELECT = { id: true, name: true, color: true, type: true };
 
 const createTransactionSchema = z.object({
-  description: z.string().trim().min(1, 'Descricao obrigatoria'),
+  description: z.string().trim().min(1, 'Descricao obrigatoria').max(200),
   amount: z.coerce.number().positive('Valor deve ser maior que zero'),
   date: z.coerce.date(),
   categoryId: z.string().uuid('categoryId invalido'),

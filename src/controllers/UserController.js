@@ -6,14 +6,17 @@ import env from '../config/env.js';
 import { AppError } from '../utils/AppError.js';
 
 const registerSchema = z.object({
-  name: z.string().trim().min(2, 'Nome deve ter pelo menos 2 caracteres'),
-  email: z.string().trim().toLowerCase().email('Email invalido'),
-  password: z.string().min(8, 'Senha deve ter pelo menos 8 caracteres'),
+  name: z.string().trim().min(2, 'Nome deve ter pelo menos 2 caracteres').max(100),
+  email: z.string().trim().toLowerCase().email('Email invalido').max(255),
+  // 72 de proposito: bcrypt trunca silenciosamente qualquer coisa alem de
+  // 72 bytes - sem esse limite explicito, uma senha maior passaria a
+  // impressao de "mais segura" sem realmente ser
+  password: z.string().min(8, 'Senha deve ter pelo menos 8 caracteres').max(72, 'Senha deve ter no maximo 72 caracteres'),
 });
 
 const loginSchema = z.object({
-  email: z.string().trim().toLowerCase().email('Email invalido'),
-  password: z.string().min(1, 'Senha obrigatoria'),
+  email: z.string().trim().toLowerCase().email('Email invalido').max(255),
+  password: z.string().min(1, 'Senha obrigatoria').max(72),
 });
 
 function issueToken(userId) {

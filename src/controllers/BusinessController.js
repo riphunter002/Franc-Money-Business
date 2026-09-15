@@ -2,10 +2,10 @@ import { z } from 'zod';
 import prisma from '../config/prisma.js';
 
 const createBusinessSchema = z.object({
-  name: z.string().trim().min(2, 'Nome deve ter pelo menos 2 caracteres'),
+  name: z.string().trim().min(2, 'Nome deve ter pelo menos 2 caracteres').max(100),
   // string livre de proposito (ex: "barbearia", "pizzaria", "outro") -
   // nao trava futuros tipos de negocio numa enum fechada
-  type: z.string().trim().min(2, 'Tipo deve ter pelo menos 2 caracteres'),
+  type: z.string().trim().min(2, 'Tipo deve ter pelo menos 2 caracteres').max(50),
 });
 
 export const BusinessController = {

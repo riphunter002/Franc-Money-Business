@@ -6,7 +6,7 @@ import { findScoped } from '../utils/findScoped.js';
 const HEX_COLOR = /^#[0-9A-Fa-f]{6}$/;
 
 const createCategorySchema = z.object({
-  name: z.string().trim().min(2, 'Nome deve ter pelo menos 2 caracteres'),
+  name: z.string().trim().min(2, 'Nome deve ter pelo menos 2 caracteres').max(50),
   type: z.enum(['INCOME', 'EXPENSE']),
   color: z.string().regex(HEX_COLOR, 'Cor deve ser um hex valido, ex: #22C55E'),
 });
