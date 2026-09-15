@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { DEFAULT_CATEGORIES } from '../config/defaultCategories.js';
 import prisma from '../config/prisma.js';
 
 const createBusinessSchema = z.object({
@@ -12,8 +13,16 @@ export const BusinessController = {
   async create(req, res) {
     const data = createBusinessSchema.parse(req.body);
 
+    // escrita aninhada: negocio + categorias padrao nascem numa unica
+    // operacao atomica, entao nunca sobra um negocio sem categoria nenhuma
+    // caso algo falhe no meio
     const business = await prisma.business.create({
-      data: { name: data.name, type: data.type, ownerId: req.userId },
+      data: {
+        name: data.name,
+        type: data.type,
+        ownerId: req.userId,
+        categories: { create: DEFAULT_CATEGORIES },
+      },
     });
 
     res.status(201).json(business);
