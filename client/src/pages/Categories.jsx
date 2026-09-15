@@ -46,13 +46,16 @@ export function Categories() {
   }
 
   return (
-    <div className="page-wide">
-      <div className="page-header">
-        <h1>Categorias</h1>
-        <button type="button" onClick={() => setModalCategory(null)}>
+    <div className="page">
+      <header className="page-head">
+        <div>
+          <p className="page-eyebrow">Organização</p>
+          <h1>Categorias</h1>
+        </div>
+        <button type="button" className="primary-button" onClick={() => setModalCategory(null)}>
           Nova categoria
         </button>
-      </div>
+      </header>
 
       {error && <p className="error">{error}</p>}
 

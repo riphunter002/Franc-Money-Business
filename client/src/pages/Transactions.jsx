@@ -68,13 +68,16 @@ export function Transactions() {
   }
 
   return (
-    <div className="page-wide">
-      <div className="page-header">
-        <h1>Transações</h1>
-        <button type="button" onClick={() => setModalTransaction(null)}>
+    <div className="page">
+      <header className="page-head">
+        <div>
+          <p className="page-eyebrow">Movimentações</p>
+          <h1>Transações</h1>
+        </div>
+        <button type="button" className="primary-button" onClick={() => setModalTransaction(null)}>
           Nova transação
         </button>
-      </div>
+      </header>
 
       <div className="filters-row">
         <select value={typeFilter} onChange={(e) => handleFilterChange(e.target.value)}>
