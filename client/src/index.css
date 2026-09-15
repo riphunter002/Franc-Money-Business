@@ -605,7 +605,7 @@ button {
   align-items: center;
   justify-content: center;
   padding: 1rem;
-  background: linear-gradient(160deg, #0b1f1a 0%, #0f2c1f 45%, #123a26 100%);
+  background: linear-gradient(160deg, #030712 0%, #0a1128 45%, #101d3f 100%);
 }
 
 .login-page .auth-form {
@@ -629,27 +629,62 @@ button {
 
 .login-chart-line {
   fill: none;
-  stroke: #34d399;
   stroke-width: 2;
   stroke-linecap: round;
   stroke-linejoin: round;
-  opacity: 0.35;
-  filter: drop-shadow(0 0 6px rgba(52, 211, 153, 0.55));
+  opacity: 0.5;
   stroke-dasharray: 10 8;
-  animation: login-chart-flow 5s linear infinite;
+  /* duas animacoes juntas: o "fluxo" continuo do traco (dashoffset) e a
+     troca de cor em degraus - steps() faz a cor PULAR de uma pra outra a
+     cada 2s (5 cores x 2s = ciclo de 10s), em vez de misturar suavemente */
+  animation:
+    login-chart-flow 5s linear infinite,
+    login-chart-color 10s steps(5, jump-none) infinite;
 }
 
 .login-chart-line--soft {
-  stroke: #f7d774;
-  opacity: 0.18;
   stroke-width: 1.5;
-  animation-duration: 8s;
-  animation-direction: reverse;
+  opacity: 0.28;
+  animation:
+    login-chart-flow 8s linear infinite reverse,
+    login-chart-color 10s steps(5, jump-none) infinite;
+  /* atraso negativo so na troca de cor - a linha de fundo fica fora de
+     fase da linha principal, entao nao trocam de cor exatamente juntas */
+  animation-delay: 0s, -5s;
 }
 
 @keyframes login-chart-flow {
   to {
     stroke-dashoffset: -180;
+  }
+}
+
+/* paleta "premium" (dourado, azul, violeta, rose, prata) - de proposito
+   sem verde, trocando junto com o filtro de brilho pra combinar sempre */
+@keyframes login-chart-color {
+  0% {
+    stroke: #38bdf8;
+    filter: drop-shadow(0 0 6px rgba(56, 189, 248, 0.6));
+  }
+  20% {
+    stroke: #facc15;
+    filter: drop-shadow(0 0 6px rgba(250, 204, 21, 0.6));
+  }
+  40% {
+    stroke: #a78bfa;
+    filter: drop-shadow(0 0 6px rgba(167, 139, 250, 0.6));
+  }
+  60% {
+    stroke: #f472b6;
+    filter: drop-shadow(0 0 6px rgba(244, 114, 182, 0.6));
+  }
+  80% {
+    stroke: #f8fafc;
+    filter: drop-shadow(0 0 6px rgba(248, 250, 252, 0.6));
+  }
+  100% {
+    stroke: #38bdf8;
+    filter: drop-shadow(0 0 6px rgba(56, 189, 248, 0.6));
   }
 }
 
