@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ApiError } from '../api/client.js';
+import { LoginBackground } from '../components/LoginBackground.jsx';
 import { useAuth } from '../hooks/useAuth.jsx';
 
 export function Login() {
@@ -28,7 +29,8 @@ export function Login() {
   }
 
   return (
-    <div className="auth-page">
+    <div className="login-page">
+      <LoginBackground />
       <form onSubmit={handleSubmit} className="auth-form">
         <h1>Entrar</h1>
         {error && <p className="error">{error}</p>}
