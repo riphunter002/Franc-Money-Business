@@ -30,7 +30,7 @@ export function Login() {
   }
 
   return (
-    <AuthCard tagline="Entre para acompanhar as finanças do seu negócio">
+    <AuthCard title="Entrar" tagline="Acompanhe as finanças do seu negócio">
       <form onSubmit={handleSubmit}>
         {error && <p className="error">{error}</p>}
 

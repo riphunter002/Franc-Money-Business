@@ -33,7 +33,7 @@ export function Register() {
   }
 
   return (
-    <AuthCard tagline="Crie sua conta e comece a controlar o seu negócio">
+    <AuthCard title="Criar conta" tagline="Comece a controlar o seu negócio hoje">
       <form onSubmit={handleSubmit}>
         {error && <p className="error">{error}</p>}
 
