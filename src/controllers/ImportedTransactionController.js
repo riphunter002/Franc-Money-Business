@@ -10,7 +10,11 @@ const bulkCreateSchema = z.object({
     .array(
       z.object({
         description: z.string().trim().min(1, 'Descrição obrigatória').max(200),
-        amount: z.coerce.number().positive('Valor deve ser maior que zero'),
+        // negativo e aceito de proposito: numa fatura, credito/estorno vem
+        // com sinal, e a tabela de espera guarda a linha COMO ELA VEIO do
+        // arquivo. A regra "valor sempre positivo" e da Transaction e e
+        // aplicada no confirm, nao aqui.
+        amount: z.coerce.number().refine((v) => v !== 0, 'Valor não pode ser zero'),
         date: z.coerce.date(),
       }),
     )
@@ -84,7 +88,11 @@ export const ImportedTransactionController = {
       prisma.transaction.create({
         data: {
           description: overrides.description ?? pendente.description,
-          amount: overrides.amount ?? pendente.amount,
+          // Math.abs fecha a invariante da Transaction no servidor: o valor e
+          // sempre positivo e quem diz a direcao e o type da categoria. Vale
+          // tanto pro credito que veio negativo do arquivo quanto pra um
+          // negativo que o cliente mandasse por engano.
+          amount: Math.abs(Number(overrides.amount ?? pendente.amount)),
           date: overrides.date ?? pendente.date,
           // type sempre vem da categoria, nunca do cliente (mesma regra do
           // TransactionController)

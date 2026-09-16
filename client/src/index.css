@@ -1205,22 +1205,91 @@ h2 {
 
 .import-form {
   display: flex;
-  align-items: center;
+  align-items: stretch;
   gap: 0.75rem;
   flex-wrap: wrap;
   margin-bottom: 0.85rem;
 }
 
-.import-form input[type='file'] {
-  flex: 1;
-  min-width: 220px;
-  font: inherit;
-  font-size: 0.85rem;
-  padding: 0.6rem 0.75rem;
-  border: 1px solid var(--border-color);
-  border-radius: 10px;
-  background: var(--bg-card);
-  color: var(--text-primary);
+/* area de arrastar-e-soltar. E um <label>, entao o clique em qualquer ponto
+   dela abre o seletor de arquivo do sistema - por isso o cursor de ponteiro */
+.dropzone {
+  flex: 1 1 320px;
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 1rem 1.15rem;
+  border: 1.5px dashed var(--border-color);
+  border-radius: 14px;
+  background: var(--bg-page);
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.dropzone:hover {
+  border-color: var(--accent);
+}
+
+/* o input continua no DOM (e o unico jeito de abrir o seletor nativo), so
+   sai de vista - nada de display:none, que o tiraria da ordem de tabulacao */
+.dropzone-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.dropzone-input:focus-visible + .dropzone-icone {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.dropzone--ativa,
+.dropzone--cheia {
+  border-color: var(--accent);
+  border-style: solid;
+  background: var(--accent-soft);
+}
+
+.dropzone-icone {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  background: var(--accent-soft);
+  color: var(--alert-icon);
+}
+
+.dropzone--ativa .dropzone-icone,
+.dropzone--cheia .dropzone-icone {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+.dropzone-texto {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.dropzone-texto strong {
+  font-size: 0.9rem;
+  overflow-wrap: anywhere;
+}
+
+.dropzone-texto span {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+}
+
+.import-enviar {
+  flex: 0 0 auto;
+  align-self: stretch;
+  padding-inline: 1.6rem;
 }
 
 .import-formats code {
@@ -1261,7 +1330,7 @@ h2 {
 }
 
 .celula-editavel--valor {
-  max-width: 120px;
+  max-width: 95px;
 }
 
 .celula-editavel:focus,
@@ -1283,8 +1352,121 @@ h2 {
   max-width: 190px;
 }
 
+/* larguras fixas na tabela de revisao: a DESCRICAO e o campo que o usuario
+   le pra decidir a categoria, entao ela fica com todo o espaco que sobra.
+   Sem table-layout:fixed o navegador distribui pelo conteudo e a descricao
+   acaba espremida entre campos de largura previsivel. */
+.tabela-revisao {
+  table-layout: fixed;
+}
+
+.tabela-revisao th,
+.tabela-revisao td {
+  padding-inline: 0.6rem;
+}
+
+.tabela-revisao th:nth-child(1) {
+  width: 165px;
+}
+
+.tabela-revisao th:nth-child(3) {
+  width: 130px;
+}
+
+.tabela-revisao th:nth-child(4) {
+  width: 195px;
+}
+
+/* o select tem largura natural maior que a coluna: sem prender em 100% ele
+   transborda e passa por baixo dos botoes de acao */
+.tabela-revisao select {
+  width: 100%;
+  max-width: none;
+}
+
+.tabela-revisao th:nth-child(5) {
+  width: 226px;
+}
+
 .linha-sem-categoria td {
   background: var(--alert-bg);
+}
+
+/* prefixo "R$" colado no campo de valor, pra coluna ler como dinheiro e nao
+   como um numero solto */
+.celula-valor {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.celula-valor-moeda {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+.tag-credito {
+  display: inline-block;
+  margin-top: 0.35rem;
+  padding: 0.12rem 0.45rem;
+  border-radius: 999px;
+  background: rgba(12, 163, 12, 0.13);
+  color: var(--income);
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.import-aviso--credito {
+  color: var(--income);
+}
+
+/* botoes de linha da tabela de revisao: confirmar e descartar sao acoes de
+   peso diferente, entao um e solido e o outro e contorno - ler so pela cor
+   do texto, como era antes, nao dava hierarquia nenhuma */
+.row-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.38rem 0.5rem;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  font-size: 0.78rem;
+  font-weight: 700;
+  white-space: nowrap;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.row-button--confirmar {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+.row-button--confirmar:hover:not(:disabled) {
+  background: var(--accent-hover);
+}
+
+.row-button--descartar {
+  background: none;
+  border-color: var(--border-color);
+  color: var(--text-secondary);
+}
+
+.row-button--descartar:hover:not(:disabled) {
+  border-color: var(--expense);
+  color: var(--expense);
+}
+
+.row-button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.table-actions .row-button + .row-button {
+  margin-left: 0.4rem;
 }
 
 /* ---------- sugestoes de categoria ---------- */
