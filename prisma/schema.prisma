@@ -19,16 +19,17 @@ model User {
 }
 
 model Business {
-  id           String        @id @default(uuid())
-  name         String
+  id                   String                @id @default(uuid())
+  name                 String
   // string livre por enquanto (ex: "barbearia", "pizzaria") - nao travar
   // futuros tipos de negocio numa enum fechada
-  type         String
-  ownerId      String
-  owner        User          @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-  createdAt    DateTime      @default(now())
-  categories   Category[]
-  transactions Transaction[]
+  type                 String
+  ownerId              String
+  owner                User                  @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  createdAt            DateTime              @default(now())
+  categories           Category[]
+  transactions         Transaction[]
+  importedTransactions ImportedTransaction[]
 
   @@index([ownerId])
 }
@@ -39,15 +40,16 @@ enum CategoryType {
 }
 
 model Category {
-  id           String        @id @default(uuid())
-  name         String
-  type         CategoryType
+  id                   String                @id @default(uuid())
+  name                 String
+  type                 CategoryType
   // cor em hex, usada diretamente nos graficos do dashboard
-  color        String
-  businessId   String
-  business     Business      @relation(fields: [businessId], references: [id], onDelete: Cascade)
-  transactions Transaction[]
-  createdAt    DateTime      @default(now())
+  color                String
+  businessId           String
+  business             Business              @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  transactions         Transaction[]
+  importedTransactions ImportedTransaction[]
+  createdAt            DateTime              @default(now())
 
   @@index([businessId])
 }
@@ -71,4 +73,22 @@ model Transaction {
   // intervalo de datas (usado por /summary e /alerts)
   @@index([businessId, date])
   @@index([categoryId])
+}
+
+// Linha lida de um arquivo importado, aguardando revisao do usuario. Ainda
+// NAO e uma Transaction: vira uma so quando o usuario confirma. Por isso
+// categoryId e opcional aqui - a linha existe antes de haver categoria
+// escolhida - enquanto em Transaction ela e obrigatoria.
+model ImportedTransaction {
+  id          String    @id @default(uuid())
+  description String
+  amount      Decimal   @db.Decimal(10, 2)
+  date        DateTime
+  businessId  String
+  business    Business  @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  categoryId  String?
+  category    Category? @relation(fields: [categoryId], references: [id])
+  createdAt   DateTime  @default(now())
+
+  @@index([businessId])
 }

@@ -1201,6 +1201,92 @@ h2 {
   min-width: 3px;
 }
 
+/* ---------- importacao de extrato ---------- */
+
+.import-form {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.85rem;
+}
+
+.import-form input[type='file'] {
+  flex: 1;
+  min-width: 220px;
+  font: inherit;
+  font-size: 0.85rem;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  background: var(--bg-card);
+  color: var(--text-primary);
+}
+
+.import-formats code {
+  padding: 0.1rem 0.35rem;
+  border-radius: 5px;
+  background: var(--bg-elevated);
+  color: var(--accent);
+  font-size: 0.78rem;
+}
+
+.import-resumo {
+  margin: 0.85rem 0 0;
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.import-aviso {
+  margin: -0.35rem 0 0.85rem;
+  color: var(--alert-icon);
+  font-weight: 600;
+}
+
+.panel-head-action {
+  margin-left: auto;
+}
+
+/* campos editaveis dentro da tabela de revisao - sem borda pesada, pra
+   tabela nao virar um formulario visualmente */
+.celula-editavel {
+  width: 100%;
+  font: inherit;
+  font-size: 0.85rem;
+  padding: 0.4rem 0.55rem;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: var(--bg-page);
+  color: var(--text-primary);
+}
+
+.celula-editavel--valor {
+  max-width: 120px;
+}
+
+.celula-editavel:focus,
+.data-table select:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+/* o select nativo nao segue o color-scheme de forma confiavel (mesmo caso
+   ja visto nos modais), entao recebe as cores explicitamente */
+.data-table select {
+  font: inherit;
+  font-size: 0.85rem;
+  padding: 0.4rem 0.55rem;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: var(--bg-page);
+  color: var(--text-primary);
+  max-width: 190px;
+}
+
+.linha-sem-categoria td {
+  background: var(--alert-bg);
+}
+
 /* ---------- sugestoes de categoria ---------- */
 
 .suggestion-intro {
@@ -1349,11 +1435,17 @@ h2 {
   border-bottom: none;
 }
 
+/* nada de display:flex aqui: um <td> com flex sai do layout de tabela, para
+   de acompanhar a altura da linha e ignora o fundo dela (aparecia como um
+   retangulo branco vazando a borda nas linhas destacadas do import). Os
+   botoes ja sao inline, entao text-align resolve o alinhamento. */
 .table-actions {
-  display: flex;
-  gap: 0.85rem;
-  justify-content: flex-end;
+  text-align: right;
   white-space: nowrap;
+}
+
+.table-actions .link-button + .link-button {
+  margin-left: 0.85rem;
 }
 
 .link-button {

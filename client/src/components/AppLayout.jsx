@@ -24,6 +24,16 @@ function IconTransacoes() {
   );
 }
 
+function IconImportar() {
+  return (
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 16V4" />
+      <path d="M8 8l4-4 4 4" />
+      <path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3" />
+    </svg>
+  );
+}
+
 function IconCategorias() {
   return (
     <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
@@ -37,6 +47,7 @@ function IconCategorias() {
 const NAV_ITEMS = [
   { to: '/', label: 'Painel', end: true, Icon: IconPainel },
   { to: '/transactions', label: 'Transações', end: false, Icon: IconTransacoes },
+  { to: '/import', label: 'Importar', end: false, Icon: IconImportar },
   { to: '/categories', label: 'Categorias', end: false, Icon: IconCategorias },
 ];
 

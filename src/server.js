@@ -7,6 +7,7 @@ import { swaggerSpec } from './config/swagger.js';
 import { authRoutes } from './routes/authRoutes.js';
 import { businessRoutes } from './routes/businessRoutes.js';
 import { categoryRoutes } from './routes/categoryRoutes.js';
+import { importedTransactionRoutes } from './routes/importedTransactionRoutes.js';
 import { transactionRoutes } from './routes/transactionRoutes.js';
 import { auth } from './middlewares/auth.js';
 import { businessOwnership } from './middlewares/businessOwnership.js';
@@ -34,6 +35,7 @@ app.use(authRoutes);
 app.use('/businesses', businessRoutes);
 app.use('/businesses/:businessId/categories', auth, businessOwnership, categoryRoutes);
 app.use('/businesses/:businessId/transactions', auth, businessOwnership, transactionRoutes);
+app.use('/businesses/:businessId/imported-transactions', auth, businessOwnership, importedTransactionRoutes);
 
 app.use((req, res) => {
   res.status(404).json({ error: 'Rota não encontrada' });
