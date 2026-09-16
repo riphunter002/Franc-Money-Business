@@ -10,7 +10,7 @@ export function LoginEmblem() {
         <span />
       </div>
 
-      <div className="login-emblem-badge">FM</div>
+      <img className="login-emblem-logo" src="/logo-franc.png" alt="Franc Money Business" />
 
       <p className="login-emblem-name">
         Franc Money <strong>Business</strong>
