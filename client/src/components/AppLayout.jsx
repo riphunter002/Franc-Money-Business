@@ -85,19 +85,43 @@ export function AppLayout() {
       <aside className="app-sidebar">
         <div className="brand">
           <img className="brand-mark" src="/logo-franc.png" alt="" />
-          <span className="brand-name">
+          <span className="brand-name" translate="no">
             Franc Money <strong>Business</strong>
           </span>
         </div>
 
         {/* antes so dava pra trocar de negocio deslogando - agora e um
             atalho direto pra tela de selecao */}
-        <button type="button" className="business-switch" onClick={() => navigate('/business-setup')}>
+        {/* o negocio e o contexto de tudo que a tela mostra, entao e ele que
+            tem destaque; o usuario logado vem abaixo, menor. O "Trocar negocio"
+            deixou de ser texto pra virar icone - a terceira linha roubaria o
+            destaque que o nome do negocio precisa ter. */}
+        <button
+          type="button"
+          className="business-switch"
+          onClick={() => navigate('/business-setup')}
+          title="Trocar de negócio"
+        >
           <span className="business-switch-badge">{activeBusiness.name.charAt(0).toUpperCase()}</span>
           <span className="business-switch-info">
             <span className="business-switch-name">{activeBusiness.name}</span>
-            <span className="business-switch-hint">Trocar negócio</span>
+            <span className="business-switch-user">{user?.name}</span>
           </span>
+          <svg
+            className="business-switch-icone"
+            viewBox="0 0 24 24"
+            width="15"
+            height="15"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.9"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M4 8h13l-3-3" />
+            <path d="M20 16H7l3 3" />
+          </svg>
         </button>
 
         <nav className="app-nav">
@@ -110,7 +134,6 @@ export function AppLayout() {
         </nav>
 
         <div className="app-sidebar-footer">
-          <span className="sidebar-user">{user?.name}</span>
           <button
             type="button"
             className="sidebar-action"
