@@ -73,7 +73,7 @@ export function AppLayout() {
     <div className="app-shell">
       <aside className="app-sidebar">
         <div className="brand">
-          <span className="brand-mark">FM</span>
+          <img className="brand-mark" src="/logo-franc.png" alt="" />
           <span className="brand-name">
             Franc Money <strong>Business</strong>
           </span>
