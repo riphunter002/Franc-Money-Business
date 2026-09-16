@@ -2,7 +2,9 @@ import { useEffect, useState } from 'react';
 import { getAlerts } from '../api/alerts.js';
 import { ApiError } from '../api/client.js';
 import { getSummary } from '../api/summary.js';
+import { getHistory } from '../api/history.js';
 import { AlertCard } from '../components/AlertCard.jsx';
+import { BalanceChart } from '../components/BalanceChart.jsx';
 import { CategoryBreakdown } from '../components/CategoryBreakdown.jsx';
 import { StatCard } from '../components/StatCard.jsx';
 import { useBusiness } from '../hooks/useBusiness.jsx';
@@ -30,6 +32,9 @@ export function Dashboard() {
   const [alerts, setAlerts] = useState(null);
   const [error, setError] = useState(null);
 
+  const [historyMonths, setHistoryMonths] = useState(6);
+  const [history, setHistory] = useState(null);
+
   useEffect(() => {
     // summary e alerts sao independentes um do outro - buscar os dois em
     // paralelo (nao um esperando o outro) deixa a pagina pronta mais rapido
@@ -40,6 +45,15 @@ export function Dashboard() {
       })
       .catch((err) => setError(err instanceof ApiError ? err.message : 'Erro ao carregar o painel'));
   }, [activeBusiness.id]);
+
+  // efeito separado de proposito: trocar 3M/6M/12M rebusca so o historico,
+  // sem refazer as chamadas de summary e alerts, que nao mudam com isso
+  useEffect(() => {
+    setHistory(null);
+    getHistory(activeBusiness.id, historyMonths)
+      .then((dados) => setHistory(dados.months))
+      .catch((err) => setError(err instanceof ApiError ? err.message : 'Erro ao carregar o histórico'));
+  }, [activeBusiness.id, historyMonths]);
 
   const isLoading = !summary || !alerts;
 
@@ -86,6 +100,25 @@ export function Dashboard() {
             ) : (
               <p className="alert-empty">Nenhum gasto fora do padrão este mês. Tudo dentro do esperado.</p>
             )}
+          </section>
+
+          <section className="panel">
+            <div className="panel-head">
+              <h2>Evolução do saldo</h2>
+              <div className="period-switch">
+                {[3, 6, 12].map((qtd) => (
+                  <button
+                    key={qtd}
+                    type="button"
+                    className={historyMonths === qtd ? 'is-active' : ''}
+                    onClick={() => setHistoryMonths(qtd)}
+                  >
+                    {qtd}M
+                  </button>
+                ))}
+              </div>
+            </div>
+            {history ? <BalanceChart months={history} /> : <p className="empty-state">Carregando...</p>}
           </section>
 
           <section className="panel">

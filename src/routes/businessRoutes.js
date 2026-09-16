@@ -94,3 +94,23 @@ businessRoutes.get('/:businessId/summary', auth, businessOwnership, SummaryContr
  *       200: { description: "{ alerts: [...] }" }
  */
 businessRoutes.get('/:businessId/alerts', auth, businessOwnership, AlertController.list);
+
+/**
+ * @openapi
+ * /businesses/{businessId}/history:
+ *   get:
+ *     summary: "Serie mensal de receita, despesa e saldo (padrao: 6 meses)"
+ *     tags: [Summary]
+ *     security: [{ bearerAuth: [] }]
+ *     parameters:
+ *       - in: path
+ *         name: businessId
+ *         required: true
+ *         schema: { type: string }
+ *       - in: query
+ *         name: months
+ *         schema: { type: integer, default: 6, minimum: 2, maximum: 24 }
+ *     responses:
+ *       200: { description: "{ months: [{ month, income, expense, balance }] }" }
+ */
+businessRoutes.get('/:businessId/history', auth, businessOwnership, SummaryController.history);

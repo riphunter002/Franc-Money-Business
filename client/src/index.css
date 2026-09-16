@@ -1015,6 +1015,133 @@ h2 {
   margin: 0;
 }
 
+/* ---------- grafico de evolucao do saldo ---------- */
+
+.period-switch {
+  display: flex;
+  gap: 0.25rem;
+  margin-left: auto;
+  padding: 0.2rem;
+  border-radius: 999px;
+  background: var(--bg-elevated);
+}
+
+.period-switch button {
+  border: none;
+  background: none;
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+.period-switch button.is-active {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+.chart-wrap {
+  position: relative;
+}
+
+.chart {
+  width: 100%;
+  height: auto;
+  display: block;
+  overflow: visible;
+}
+
+.chart-grid {
+  stroke: var(--border-subtle);
+  stroke-width: 1;
+}
+
+/* a linha do zero e mais forte que as outras: e a referencia que diz se o
+   mes fechou no azul ou no vermelho */
+.chart-zero {
+  stroke: var(--border-color);
+  stroke-width: 1.5;
+  stroke-dasharray: 4 4;
+}
+
+.chart-axis {
+  fill: var(--text-secondary);
+  font-size: 12px;
+  font-family: inherit;
+}
+
+.chart-area {
+  fill: var(--accent);
+  opacity: 0.1;
+}
+
+.chart-line {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.chart-dot {
+  fill: var(--accent);
+  /* anel na cor do cartao mantem o ponto legivel onde ele cruza a linha */
+  stroke: var(--bg-card);
+  stroke-width: 2;
+  transition: r 0.12s ease;
+}
+
+.chart-hit {
+  fill: transparent;
+  cursor: pointer;
+}
+
+.chart-tooltip {
+  position: absolute;
+  transform: translate(-50%, calc(-100% - 14px));
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 0.6rem 0.75rem;
+  border-radius: 10px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 12px 30px rgba(3, 7, 18, 0.35);
+  font-size: 0.78rem;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.chart-tooltip.is-right {
+  transform: translate(calc(-100% + 14px), calc(-100% - 14px));
+}
+
+.chart-tooltip.is-left {
+  transform: translate(-14px, calc(-100% - 14px));
+}
+
+.chart-tooltip strong {
+  font-size: 0.8rem;
+  margin-bottom: 0.15rem;
+}
+
+.chart-tooltip-linha {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  color: var(--text-secondary);
+}
+
+.chart-tooltip-linha b {
+  color: var(--text-primary);
+}
+
+.amount-negative {
+  color: var(--expense);
+}
+
 /* gastos por categoria */
 
 .breakdown {
