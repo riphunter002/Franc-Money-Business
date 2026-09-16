@@ -1074,6 +1074,108 @@ h2 {
   min-width: 3px;
 }
 
+/* ---------- sugestoes de categoria ---------- */
+
+.suggestion-intro {
+  margin: -0.5rem 0 1.1rem;
+}
+
+.suggestion-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(124px, 1fr));
+  /* 1fr aqui iguala a altura de TODAS as fileiras entre si - sem isso, cada
+     fileira se dimensiona sozinha e a ultima fica mais baixa que as outras */
+  grid-auto-rows: 1fr;
+  gap: 0.75rem;
+}
+
+/* sem isso, um nome que quebra em duas linhas deixa o bloco mais alto que
+   os vizinhos e desalinha a fileira inteira */
+.suggestion-grid > li {
+  display: flex;
+}
+
+.suggestion-tile {
+  width: 100%;
+  height: 100%;
+  justify-content: flex-start;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.85rem 0.6rem 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  background: var(--bg-card);
+  text-align: center;
+  transition:
+    border-color 0.15s ease,
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.suggestion-tile:hover:not(:disabled) {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(3, 7, 18, 0.14);
+}
+
+.suggestion-tile:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.suggestion-photo-wrap {
+  width: 74px;
+  height: 74px;
+  border-radius: 16px;
+  overflow: hidden;
+  flex-shrink: 0;
+  box-shadow: inset 0 0 0 1px rgba(245, 197, 66, 0.35);
+}
+
+/* duotone dourado: as fotos vem de fotografos diferentes, com luz e cor
+   completamente distintas - o filtro uniformiza todas no mesmo tom e
+   impede que a grade vire uma colcha de retalhos */
+.suggestion-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: grayscale(1) sepia(1) saturate(1.9) hue-rotate(-14deg) brightness(0.82) contrast(1.15);
+}
+
+.suggestion-name {
+  font-size: 0.82rem;
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--text-primary);
+}
+
+.suggestion-type {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.suggestion-type--income {
+  color: var(--income);
+}
+
+.suggestion-type--expense {
+  color: var(--text-secondary);
+}
+
+.suggestion-loading {
+  font-size: 0.7rem;
+  color: var(--accent);
+  font-weight: 700;
+}
+
 /* ---------- tabelas (Transacoes/Categorias) ---------- */
 
 .filters-row {

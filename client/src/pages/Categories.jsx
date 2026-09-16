@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { deleteCategory, listCategories } from '../api/categories.js';
 import { ApiError } from '../api/client.js';
 import { CategoryModal } from '../components/CategoryModal.jsx';
+import { CategorySuggestions } from '../components/CategorySuggestions.jsx';
 import { useBusiness } from '../hooks/useBusiness.jsx';
 
 export function Categories() {
@@ -59,8 +60,12 @@ export function Categories() {
 
       {error && <p className="error">{error}</p>}
 
+      {!isLoading && (
+        <CategorySuggestions existentes={categories} onCriada={refetch} onErro={setError} />
+      )}
+
       {isLoading ? (
-        <p>Carregando...</p>
+        <p className="empty-state">Carregando...</p>
       ) : categories.length === 0 ? (
         <p className="empty-state">Nenhuma categoria cadastrada ainda.</p>
       ) : (
