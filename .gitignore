@@ -5,3 +5,4 @@ src/generated/
 client/node_modules/
 client/dist/
 *.log
+_comparacao-login/

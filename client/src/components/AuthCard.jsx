@@ -1,5 +1,5 @@
 import { LoginBackground } from './LoginBackground.jsx';
-import { LoginEmblem } from './LoginEmblem.jsx';
+import { LoginBrand } from './LoginBrand.jsx';
 
 // casca compartilhada entre Login e Cadastro: mesmo fundo, mesmo layout.
 // Sem isso, clicar em "Criar conta" jogaria o usuario numa tela com
@@ -9,14 +9,17 @@ export function AuthCard({ title, tagline, children }) {
     <div className="login-page">
       <LoginBackground />
 
+      {/* coluna unica encostada a esquerda: e ali que o video e escuro por
+          natureza (as arvores), entao o cartao ganha contraste da propria
+          imagem em vez de precisar de uma camada escura pesada por cima */}
       <div className="login-layout">
+        <LoginBrand />
+
         <div className="auth-card">
           <h1 className="auth-title">{title}</h1>
           <p className="auth-tagline">{tagline}</p>
           {children}
         </div>
-
-        <LoginEmblem />
       </div>
     </div>
   );
