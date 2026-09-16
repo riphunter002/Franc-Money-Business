@@ -17,17 +17,33 @@ import { useBusiness } from '../hooks/useBusiness.jsx';
    a cada render.
    ---------------------------------------------------------- */
 
-// "1.234,56" -> 1234.56 (ponto = milhar, virgula = decimal)
-function parseBRLNumber(text) {
-  const cleaned = text.trim().replace(/\./g, '').replace(',', '.');
-  return Number(cleaned);
-}
+// Le um valor em dinheiro SEM depender do cabecalho do arquivo.
+//
+// O cabecalho e um sinal fraco pra isso: um mesmo extrato pode vir com data
+// em dd/mm/aaaa e valor com ponto decimal, ou o contrario. Quem sabe qual e
+// o separador decimal e o proprio valor - entao e ele que decide.
+//
+// Regra: o ULTIMO ponto ou virgula e o separador decimal; o que vier antes
+// dele e separador de milhar e some.
+//   "1.234,56" -> 1234.56        "1,234.56" -> 1234.56
+//   "178,28"   -> 178.28         "178.28"   -> 178.28
+// Excecao: 3 digitos depois do separador, sem nenhum outro separador antes,
+// e milhar e nao centavos - "1.500" sao mil e quinhentos, porque dinheiro
+// nao tem 3 casas decimais.
+function parseMoney(text) {
+  // tira "R$", espaco, sinal de mais e qualquer outro enfeite
+  const limpo = text.trim().replace(/[^\d.,-]/g, '');
+  const ultimoSeparador = Math.max(limpo.lastIndexOf('.'), limpo.lastIndexOf(','));
+  if (ultimoSeparador === -1) return Number(limpo);
 
-// "1,234.56" -> 1234.56 (virgula = milhar, ponto = decimal). E o formato do
-// export do Nubank. Usar parseBRLNumber aqui faria "25.90" virar 2590 - o
-// ponto seria apagado como separador de milhar.
-function parseDotNumber(text) {
-  return Number(text.trim().replace(/,/g, ''));
+  const antes = limpo.slice(0, ultimoSeparador);
+  const depois = limpo.slice(ultimoSeparador + 1);
+
+  if (depois.length === 3 && !/[.,]/.test(antes)) {
+    return Number(antes + depois);
+  }
+
+  return Number(antes.replace(/[.,]/g, '') + '.' + depois);
 }
 
 // "05/09/2026" -> "2026-09-05" (formato que o <input type="date"> e o
@@ -46,6 +62,12 @@ function parseBRDate(text) {
 function parseIsoDate(text) {
   const trimmed = text.trim();
   return /^\d{4}-\d{2}-\d{2}$/.test(trimmed) ? trimmed : null;
+}
+
+// Mesma ideia do valor: a data se identifica sozinha pela forma, entao nao
+// precisa que o cabecalho diga qual das duas convencoes o arquivo usa.
+function parseDate(text) {
+  return parseIsoDate(text) ?? parseBRDate(text);
 }
 
 // Separa uma linha de CSV pelo delimitador respeitando campos entre aspas
@@ -82,34 +104,41 @@ function splitCsvLine(line, delimiter) {
   return fields;
 }
 
-// Reconhece dois formatos pelo cabecalho:
-//   "data;titulo;valor" -> generico (qualquer banco/planilha em pt-BR)
+// O cabecalho agora decide so DUAS coisas: qual o delimitador das colunas e
+// se a primeira linha e titulo ou ja e dado. Data e valor se identificam
+// sozinhos pela forma, entao um arquivo com cabecalho desconhecido (ou com
+// o BOM que o Excel cola na frente) continua sendo lido certo.
+//   "data;titulo;valor" -> generico (planilha/banco em pt-BR)
 //   "date,title,amount" -> export de fatura do Nubank
-// Sem um desses cabecalhos, assume o generico sem cabecalho
 function detectCsvFormat(firstLine) {
   const headerLower = firstLine.trim().toLowerCase();
 
   if (headerLower === 'date,title,amount') {
-    return { delimiter: ',', dateParser: parseIsoDate, amountParser: parseDotNumber, hasHeader: true };
+    return { delimiter: ',', hasHeader: true };
   }
 
   if (headerLower.split(';')[0]?.trim() === 'data') {
-    return { delimiter: ';', dateParser: parseBRDate, amountParser: parseBRLNumber, hasHeader: true };
+    return { delimiter: ';', hasHeader: true };
   }
 
-  return { delimiter: ';', dateParser: parseBRDate, amountParser: parseBRLNumber, hasHeader: false };
+  // sem cabecalho conhecido: vale o separador que mais divide a linha
+  const delimiter = firstLine.split(';').length > firstLine.split(',').length ? ';' : ',';
+  return { delimiter, hasHeader: false };
 }
 
 // Le o texto do CSV e devolve as linhas validas + a lista de linhas
 // ignoradas. Uma linha ruim nunca trava a importacao das outras.
 function parseCsv(text) {
   const lines = text
+    // BOM que Excel e varios bancos colam no inicio do arquivo - sem tirar,
+    // o cabecalho nunca casa e o formato acaba detectado errado
+    .replace(/^\uFEFF/, '')
     .split(/\r?\n/)
     .map((line) => line.trim())
     .filter(Boolean);
   if (!lines.length) return { rows: [], errors: [] };
 
-  const { delimiter, dateParser, amountParser, hasHeader } = detectCsvFormat(lines[0]);
+  const { delimiter, hasHeader } = detectCsvFormat(lines[0]);
   const rows = [];
   const errors = [];
 
@@ -123,9 +152,9 @@ function parseCsv(text) {
     }
 
     const [rawDate, rawTitle, rawAmount] = parts;
-    const date = dateParser(rawDate);
+    const date = parseDate(rawDate);
     const description = rawTitle.trim();
-    const amount = amountParser(rawAmount);
+    const amount = parseMoney(rawAmount);
 
     if (!date || !description || !amount || Number.isNaN(amount) || amount <= 0) {
       errors.push(`linha ${index + 1} (dados inválidos)`);
@@ -289,7 +318,9 @@ export function ImportTransactions() {
 
         <p className="hint import-formats">
           Formatos aceitos: <code>data;titulo;valor</code> (ex.: <code>05/09/2026;Supermercado Extra;150,00</code>) ou o
-          CSV de fatura do Nubank (<code>date,title,amount</code>) — detectado automaticamente pelo cabeçalho.
+          CSV de fatura do Nubank (<code>date,title,amount</code>). A data pode vir como <code>05/09/2026</code> ou{" "}
+          <code>2026-09-05</code>, e o valor com vírgula (<code>150,00</code>) ou com ponto (<code>150.00</code>) — tudo
+          é reconhecido automaticamente.
         </p>
 
         {resumo && (
